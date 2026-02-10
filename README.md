@@ -105,7 +105,7 @@ PhishTrack/
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/PhishTrack.git
+git clone https://github.com/vardaan03/PhishTrack.git
 cd PhishTrack/PhishTrack_Server
 
 # Create virtual environment (recommended)
