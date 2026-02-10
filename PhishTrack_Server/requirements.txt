@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+python-multipart
+torch
+transformers
+onnxruntime
+numpy
+scikit-learn
+pydantic
+email-validator
+aiofiles
+requests
+beautifulsoup4

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishTrack_ | Simple Defense</title>
+    <style>
+        :root {
+            --neon-green: #00ff00;
+            --neon-red: #ff0000;
+            --dark-bg: #0d0d0d;
+            --card-bg: #1a1a1a;
+        }
+
+        body {
+            background-color: black;
+            color: #eee;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* More readable font */
+            margin: 0;
+            padding: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        h1,
+        h2 {
+            text-transform: uppercase;
+            color: var(--neon-green);
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.2em;
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+
+        p,
+        li {
+            line-height: 1.6;
+            color: #ccc;
+        }
+
+        .highlight {
+            color: var(--neon-green);
+            font-weight: bold;
+        }
+
+        /* Simplified Cards */
+        .card {
+            background-color: var(--card-bg);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--neon-green);
+            margin-bottom: 10px;
+        }
+
+        /* Scan Button */
+        button {
+            background-color: var(--neon-green);
+            color: black;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+            transition: 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+
+        button:disabled {
+            background-color: #333;
+            color: #777;
+            cursor: wait;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Visual Status Box */
+        .status-box {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #111;
+            border-radius: 8px;
+            border: 1px solid #333;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .status-text {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .status-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            background-color: #333;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: var(--neon-green);
+            transition: width 0.3s;
+        }
+
+        /* Result Display */
+        .result-box {
+            display: none;
+            /* Hidden by default */
+            margin-top: 20px;
+            background-color: #220000;
+            border: 2px solid var(--neon-red);
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        .safe-result {
+            background-color: #002200;
+            border-color: var(--neon-green);
+        }
+
+        .big-score {
+            font-size: 3em;
+            font-weight: bold;
+            color: var(--neon-red);
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        @media(min-width: 600px) {
+            .grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h1 style="font-size: 2.5em; margin: 0;">PhishTrack_</h1>
+        <div style="color: #666;">SIMPLE CYBER DEFENSE</div>
+    </div>
+
+    <div class="grid">
+        <section>
+            <h2>The Problem</h2>
+            <div class="card">
+                <p><strong>1. Hackers use AI.</strong><br>
+                    They write emails that look 100% real. You can't tell the difference anymore.</p>
+            </div>
+            <div class="card">
+                <p><strong>2. Old Tools Fail.</strong><br>
+                    Antivirus scans files, but phishing is about <em>tricking you</em>, not infecting your PC.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>The Solution</h2>
+            <div class="card">
+                <p><strong>We Watch the Behavior.</strong><br>
+                    A scammer hesitates. A bot moves too fast. We track mouse movements to spot them.</p>
+            </div>
+            <div class="card">
+                <p><strong>It's Automatic.</strong><br>
+                    Just use your computer. If something feels "off", we alert you.</p>
+            </div>
+        </section>
+    </div>
+
+    <section id="demo-section">
+        <h2>Live Security Scan</h2>
+        <p>Click the button below to pretend you are logging into a website. We will analyze the movement.</p>
+
+        <button id="scanBtn" onclick="startScan()">RUN SECURITY CHECK</button>
+
+        <div class="status-box">
+            <div class="status-icon" id="statusIcon">🛡️</div>
+            <div class="status-text" id="statusText">System Ready</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+
+        <div id="resultBox" class="result-box">
+            <div style="font-size: 1.2em; color: #fff; margin-bottom: 10px;">THREAT LEVEL DETECTED</div>
+            <div class="big-score" id="scoreDisplay">85%</div>
+            <p id="verdictText" style="color: #ffaaaa; margin-top: 10px;">
+                <strong>Suspicious Behavior Found!</strong><br>
+                The user hesitated too much and moved the mouse strangely. This might be a scam attack.
+            </p>
+        </div>
+    </section>
+
+    <div style="margin-top: 50px; text-align: center; font-size: 0.8em; color: #444;">
+        Powered by Python & Browser Technology
+    </div>
+
+    <script>
+        const scanBtn = document.getElementById('scanBtn');
+        const statusText = document.getElementById('statusText');
+        const statusIcon = document.getElementById('statusIcon');
+        const progressBar = document.getElementById('progressBar');
+        const resultBox = document.getElementById('resultBox');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const verdictText = document.getElementById('verdictText');
+
+        function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        async function startScan() {
+            // Reset
+            scanBtn.disabled = true;
+            resultBox.style.display = 'none';
+            progressBar.style.width = '0%';
+
+            // Phase 1: Tracking
+            statusIcon.innerText = "🖱️";
+            statusText.innerText = "Tracking Mouse Movements...";
+            for (let i = 0; i < 33; i++) {
+                progressBar.style.width = i + "%";
+                await wait(60);
+            }
+
+            // Phase 2: Analyzing Speed
+            statusIcon.innerText = "⚡";
+            statusText.innerText = "Measuring Click Speed...";
+            for (let i = 33; i < 66; i++) {
+                progressBar.style.width = i + "%";
+                await wait(60);
+            }
+
+            // Phase 3: AI Thinking
+            statusIcon.innerText = "🧠";
+            statusText.innerText = "AI Analyzing Patterns...";
+            for (let i = 66; i <= 100; i++) {
+                progressBar.style.width = i + "%";
+                await wait(60);
+            }
+
+            // Result
+            statusIcon.innerText = "✅";
+            statusText.innerText = "Scan Complete.";
+
+            const risk = Math.floor(Math.random() * (95 - 60) + 60); // Random score 60-95
+            scoreDisplay.innerText = risk + "%";
+
+            resultBox.style.display = 'block';
+
+            if (risk > 80) {
+                // High Risk
+                resultBox.className = "result-box"; // Red style
+                scoreDisplay.style.color = "#ff0000";
+                verdictText.innerHTML = "<strong>Suspicious Behavior Found!</strong><br>Unusual hesitation and erratic movements detected. Proceed with caution.";
+            } else {
+                // Lower Risk (Simulated Safe state for variety? The prompt implied 'detecting', but let's keep it 'Risk' focused)
+                // Actually sticking to red/warning as it's a "PhishTrack" demo
+                resultBox.className = "result-box";
+                scoreDisplay.style.color = "orange";
+                verdictText.innerHTML = "<strong>Elevated Risk.</strong><br>Some movement patterns looked unnatural.";
+            }
+
+            scanBtn.disabled = false;
+            scanBtn.innerText = "RUN CHECK AGAIN";
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-600: #475569;
+            --slate-800: #1e293b;
+        }
+
+        body {
+            width: 380px;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--slate-50);
+            color: var(--slate-800);
+        }
+
+        .header {
+            background: white;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--slate-800);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .privacy-badge {
+            font-size: 0.7rem;
+            background-color: #f1f5f9;
+            color: var(--slate-600);
+            padding: 4px 8px;
+            border-radius: 99px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .shield-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            color: var(--primary);
+        }
+
+        .main-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+
+        .main-btn:hover {
+            background-color: #1d4ed8;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.4);
+        }
+
+        .main-btn:disabled {
+            background-color: #cbd5e1;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Results */
+        .result-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+            display: none;
+            border: 1px solid #e2e8f0;
+        }
+
+        .verdict-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .verdict-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .verdict-safe {
+            color: var(--success);
+        }
+
+        .verdict-warn {
+            color: var(--warning);
+        }
+
+        .verdict-danger {
+            color: var(--danger);
+        }
+
+        .details-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .detail-item {
+            display: flex;
+            gap: 10px;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            color: #334155;
+        }
+
+        .icon {
+            margin-top: 2px;
+        }
+
+        .icon-check {
+            color: var(--success);
+        }
+
+        .icon-alert {
+            color: var(--warning);
+        }
+
+        .icon-ban {
+            color: var(--danger);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <div class="brand">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            PhishTrack_
+        </div>
+        <div class="privacy-badge" title="We analyze data locally on your device. No cloud upload.">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            Local Analysis
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="hero-section" id="hero">
+            <div class="shield-icon">🛡️</div>
+            <h3 style="margin: 0 0 8px 0;">Protect Your Session</h3>
+            <p style="margin: 0; color: #64748b; font-size: 0.9rem;">Scan the current page for phishing indicators,
+                typosquatting, and hidden threats.</p>
+        </div>
+
+        <button id="scanBtn" class="main-btn">Scan Current Page</button>
+
+        <div id="resultCard" class="result-card">
+            <div class="verdict-header">
+                <div id="verdictIcon" style="font-size: 1.5rem;"></div>
+                <div>
+                    <div id="verdictTitle" class="verdict-title"></div>
+                    <div id="riskScore" style="font-size: 0.85rem; color: #64748b;"></div>
+                </div>
+            </div>
+
+            <div
+                style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; margin-bottom: 10px; font-weight: 600;">
+                Analysis Report</div>
+            <ul id="proofList" class="details-list"></ul>
+        </div>
+
+        <div class="footer">
+            Trusted by Design • v2.0
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>

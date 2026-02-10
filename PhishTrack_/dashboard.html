@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishTrack_ | Cyber Command</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --panel-bg: rgba(30, 41, 59, 0.6);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-red: #ef4444;
+            --accent-green: #10b981;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-dark);
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.08), transparent 25%);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: rgba(15, 23, 42, 0.95);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .brand {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 40px;
+            padding-left: 10px;
+        }
+
+        .brand i {
+            color: var(--accent-blue);
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            text-decoration: none;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-blue);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px 40px;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .welcome h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .welcome p {
+            margin: 5px 0 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Dashboard Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Scanner Specifics */
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            padding: 14px 20px 14px 45px;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 16px;
+            top: 16px;
+            color: var(--text-muted);
+        }
+
+        .scan-btn {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+            background: var(--accent-blue);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .scan-btn:hover {
+            background: #2563eb;
+        }
+
+        .evidence-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .evidence-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .evidence-item:last-child {
+            border-bottom: none;
+        }
+
+        .check-icon {
+            color: var(--accent-green);
+            margin-top: 2px;
+        }
+
+        .cross-icon {
+            color: var(--accent-red);
+            margin-top: 2px;
+        }
+
+        .warn-icon {
+            color: #f59e0b;
+            margin-top: 2px;
+        }
+
+        /* Verdict Badge */
+        .verdict-badge {
+            padding: 8px 16px;
+            border-radius: 99px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .verdict-secure {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .verdict-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .verdict-warn {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        /* Stats Row */
+        .stat-widget {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .blue-icon {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent-blue);
+        }
+
+        .green-icon {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+        }
+
+        .purple-icon {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--accent-purple);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="brand">
+            <i class="fa-solid fa-shield-halved"></i>
+            PhishTrack_
+        </div>
+        <a href="#" class="nav-item active">
+            <i class="fa-solid fa-gauge-high"></i> Dashboard
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-magnifying-glass-chart"></i> History
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-fingerprint"></i> Biometrics
+        </a>
+        <div style="margin-top: auto;">
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-gear"></i> Settings
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <div class="welcome">
+                <h1>Command Center</h1>
+                <p>Real-time threat monitoring active.</p>
+            </div>
+            <div style="display: flex; gap: 15px;">
+                <div class="verdict-badge verdict-secure" style="display: flex; align-items: center; gap: 8px;">
+                    <span
+                        style="width: 8px; height: 8px; background: #34d399; border-radius: 50%; display: block; box-shadow: 0 0 10px #34d399;"></span>
+                    SYSTEM SECURE
+                </div>
+            </div>
+        </div>
+
+        <!-- Metric Widgets -->
+        <div class="grid" style="margin-bottom: 24px;">
+            <div class="card" style="grid-column: span 4; padding: 0;">
+                <div class="stat-widget">
+                    <div class="stat-icon blue-icon"><i class="fa-solid fa-computer-mouse"></i></div>
+                    <div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Current Velocity</div>
+                        <div style="font-size: 1.25rem; font-weight: 600;" id="bioSpeed">0.00 px/ms</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="grid-column: span 4; padding: 0;">
+                <div class="stat-widget">
+                    <div class="stat-icon purple-icon"><i class="fa-solid fa-wave-square"></i></div>
+                    <div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Jitter Factor</div>
+                        <div style="font-size: 1.25rem; font-weight: 600;" id="bioJitter">0.000</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="grid-column: span 4; padding: 0;">
+                <div class="stat-widget">
+                    <div class="stat-icon green-icon"><i class="fa-solid fa-shield-virus"></i></div>
+                    <div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Scans Today</div>
+                        <div style="font-size: 1.25rem; font-weight: 600;">12</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <!-- URL Scanner Module -->
+            <div class="card" style="grid-column: span 7;">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-radar" style="color: var(--accent-red);"></i>
+                        Forensic URL Analyzer
+                    </div>
+                </div>
+
+                <div class="search-box">
+                    <i class="fa-solid fa-link"></i>
+                    <input type="text" id="urlInput"
+                        placeholder="Paste suspicious URL (e.g., http://secure-login.paypal-update.com)...">
+                    <button class="scan-btn" onclick="analyzeURL()">Analyze</button>
+                </div>
+
+                <!-- Results Area -->
+                <div id="scanResults" style="display: none;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid var(--border-color);">
+                        <div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted);">Threat Score</div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--text-main);" id="riskScore">
+                                0/100</div>
+                        </div>
+                        <div id="verdictBadge" class="verdict-badge verdict-secure">SAFE</div>
+                    </div>
+
+                    <h4
+                        style="margin: 0 0 10px 0; font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase;">
+                        Forensic Proofs</h4>
+                    <ul class="evidence-list" id="evidenceList">
+                        <!-- Evidence items injected here -->
+                    </ul>
+                </div>
+
+                <!-- Expanded Placeholder -->
+                <div id="scanPlaceholder" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                    <i class="fa-solid fa-crosshairs" style="font-size: 3rem; opacity: 0.2; margin-bottom: 10px;"></i>
+                    <p>Enter a URL to execute heuristic analysis.</p>
+                </div>
+            </div>
+
+            <!-- Biometrics Module -->
+            <div class="card" style="grid-column: span 5;">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-chart-line" style="color: var(--accent-blue);"></i>
+                        Live Biometrics
+                    </div>
+                    <div style="font-size: 0.8rem; color: var(--accent-green);">● Recording</div>
+                </div>
+                <div style="flex: 1; min-height: 250px;">
+                    <canvas id="bioChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Biometrics (Chart.js) ---
+        const ctx = document.getElementById('bioChart').getContext('2d');
+        const speedEl = document.getElementById('bioSpeed');
+        const jitterEl = document.getElementById('bioJitter');
+
+        let lastX = 0, lastY = 0, lastTime = Date.now();
+        let chartData = Array(30).fill(0);
+
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Array(30).fill(''),
+                datasets: [{
+                    data: chartData,
+                    borderColor: '#3b82f6',
+                    backgroundColor: (context) => {
+                        const ctx = context.chart.ctx;
+                        const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+                        gradient.addColorStop(0, 'rgba(59, 130, 246, 0.4)');
+                        gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
+                        return gradient;
+                    },
+                    borderWidth: 2,
+                    fill: true,
+                    pointRadius: 0,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { display: false },
+                    y: { display: false, min: 0, max: 15 } // Fixed scale for smoother visual
+                },
+                animation: false
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            const now = Date.now();
+            const dt = now - lastTime;
+            if (dt < 50) return;
+
+            const dist = Math.sqrt(Math.pow(e.clientX - lastX, 2) + Math.pow(e.clientY - lastY, 2));
+            const pxPerMs = dist / dt;
+
+            // Update Stats
+            speedEl.innerText = pxPerMs.toFixed(2) + ' px/ms';
+            jitterEl.innerText = (Math.random() * (pxPerMs / 5)).toFixed(3); // Simulated heuristic
+
+            // Update Chart
+            chartData.push(pxPerMs);
+            chartData.shift();
+            chart.update();
+
+            lastX = e.clientX;
+            lastY = e.clientY;
+            lastTime = now;
+        });
+
+        // --- URL Analyzer Logic ---
+        function analyzeURL() {
+            const input = document.getElementById('urlInput').value.trim();
+            const resultsArea = document.getElementById('scanResults');
+            const placeholder = document.getElementById('scanPlaceholder');
+            const proofList = document.getElementById('evidenceList');
+            const verdictBadge = document.getElementById('verdictBadge');
+            const riskScoreEl = document.getElementById('riskScore');
+
+            if (!input) return;
+
+            // Toggle View
+            placeholder.style.display = 'none';
+            resultsArea.style.display = 'block';
+            proofList.innerHTML = '';
+
+            let score = 0;
+            let reasons = [];
+
+            // 1. Protocol
+            if (input.startsWith('https://')) {
+                addProof('check', 'Secured with HTTPS encryption.');
+            } else if (input.startsWith('http://')) {
+                score += 25;
+                addProof('cross', 'Insecure HTTP protocol detected (Plain text).');
+            } else {
+                addProof('warn', 'No protocol specified (Standardizing...).');
+            }
+
+            // 2. Domain Parse
+            let domain = input;
+            try {
+                const url = new URL(input.startsWith('http') ? input : 'http://' + input);
+                domain = url.hostname;
+            } catch (e) {
+                score += 10;
+                addProof('warn', 'URL structure appears malformed.');
+            }
+
+            // 3. Brand Impersonation
+            const brands = ['paypal', 'amazon', 'google', 'apple', 'netflix', 'facebook'];
+            let brandImpersonation = false;
+            brands.forEach(b => {
+                if (input.includes(b) && !domain.endsWith(b + '.com')) {
+                    brandImpersonation = true;
+                    score += 40;
+                    addProof('cross', `<strong>Impersonation Detected:</strong> "<em>${b}</em>" found in URL, but domain is "<em>${domain}</em>".`);
+                }
+            });
+            if (!brandImpersonation) addProof('check', 'No brand spoofing patterns matching major services.');
+
+            // 4. IP Check
+            if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(domain)) {
+                score += 30;
+                addProof('cross', 'Host is a raw IP Address (uncommon for legitimate sites).');
+            } else {
+                addProof('check', 'Valid DNS Domain Name.');
+            }
+
+            // 5. Keyword Heuristics
+            if (input.includes('login') || input.includes('verify') || input.includes('secure')) {
+                if (score > 0) {
+                    score += 15;
+                    addProof('cross', 'Suspicious use of "login/verify" keywords on a flagged domain.');
+                } else {
+                    addProof('warn', 'Sensitive keywords (login/verify) detected. Ensure this is the official site.');
+                }
+            }
+
+            // Verdict Rendering
+            riskScoreEl.innerText = score + '/100';
+
+            verdictBadge.className = 'verdict-badge'; // Reset
+            if (score >= 50) {
+                verdictBadge.classList.add('verdict-danger');
+                verdictBadge.innerText = 'CRITICAL THREAT';
+            } else if (score >= 20) {
+                verdictBadge.classList.add('verdict-warn');
+                verdictBadge.innerText = 'SUSPICIOUS';
+            } else {
+                verdictBadge.classList.add('verdict-secure');
+                verdictBadge.innerText = 'LIKELY SAFE';
+            }
+        }
+
+        function addProof(type, text) {
+            const li = document.createElement('li');
+            li.className = 'evidence-item';
+
+            let iconClass = '';
+            if (type === 'check') iconClass = 'fa-circle-check check-icon';
+            if (type === 'cross') iconClass = 'fa-circle-xmark cross-icon';
+            if (type === 'warn') iconClass = 'fa-triangle-exclamation warn-icon';
+
+            li.innerHTML = `<i class="fa-solid ${iconClass}"></i> <div>${text}</div>`;
+            document.getElementById('evidenceList').appendChild(li);
+        }
+
+    </script>
+</body>
+
+</html>

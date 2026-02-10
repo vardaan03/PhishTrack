@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>PhishTrack | Neural Defense Platform</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="layout">
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">🛡️</div>
+                <div>
+                    <h1>PhishTrack_ AI</h1>
+                    <p>Advanced Phishing Diagnostics</p>
+                </div>
+            </div>
+            <div class="nav-tabs">
+                <button class="tab-btn active" onclick="setMode('url')">🌐 Check URL</button>
+                <button class="tab-btn" onclick="setMode('email')">📧 Analyze Email</button>
+            </div>
+        </header>
+
+        <div class="grid">
+            <!-- Input Column -->
+            <main class="card">
+                <h2 id="sectionTitle">URL Scanner</h2>
+
+                <div id="urlSection">
+                    <div class="helper-text">
+                        <strong>How it works:</strong> Paste any suspicious link below. Our AI checks for typosquatting
+                        (e.g. paypa1.com), IP masking, and malicious patterns.
+                    </div>
+                    <input type="text" id="urlInput" class="input-field" placeholder="https://example.com/login...">
+                </div>
+
+                <div id="emailSection" class="hidden">
+                    <div class="helper-text">
+                        <strong>Deep Forensics:</strong> Paste the full email content. We analyze the headers for
+                        spoofing (SPF/DMARC) and the body text for psychological manipulation (Fear/Urgency).
+                    </div>
+                    <input type="text" id="subjectInput" class="input-field" placeholder="Email Subject">
+                    <textarea id="headersInput" class="input-field"
+                        placeholder="Paste Email Headers (Optional but recommended)"></textarea>
+                    <textarea id="bodyInput" class="input-field"
+                        placeholder="Paste Email Body Content here..."></textarea>
+                </div>
+
+                <button class="action-btn" onclick="runAnalysis()">Run AI Analysis</button>
+
+                <a class="demo-link" onclick="loadDemo()">Don't have data? Load a <b>LIVE VIRUS SAMPLE</b> (Demo)</a>
+            </main>
+
+            <!-- Sidebar Results -->
+            <aside class="card">
+                <h2>Live Diagnostics</h2>
+
+                <div id="initialState" style="text-align:center; color: #52525b; padding: 2rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;">📡</div>
+                    <p>Waiting for data stream...</p>
+                </div>
+
+                <div id="resultState" class="hidden">
+                    <div class="verdict-box">
+                        <div id="riskCircle" class="risk-circle">
+                            <span id="scoreVal" class="score-num">0</span>
+                            <span class="score-label">Risk</span>
+                        </div>
+                        <div id="verdictText" class="verdict-text">SAFE</div>
+                    </div>
+
+                    <div class="log-container" id="logList">
+                        <!-- Logs appear here -->
+                    </div>
+
+                    <div style="text-align: center; margin-top: 1rem; font-size: 0.8rem; color: #52525b;">
+                        Inference Time: <span id="timeVal">--</span>ms
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+
+</html>
